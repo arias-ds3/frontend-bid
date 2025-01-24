@@ -1,10 +1,33 @@
-import { useState } from "react";
-import { backendURL } from "../Globals";
 
-let LoginUserComponent = () => {
-    let [email, setEmail] = useState("");
-    let [password, setPassword] = useState("");
+import { useEffect, useState } from "react";
+import { backendURL } from "../Globals";
+import { useNavigate } from "react-router-dom";
+
+let LoginUserComponent = (props) => {
+    let { setLogin } = props;
+
+    let [email, setEmail] = useState(null);
+    let [password, setPassword] = useState(null);
     let [message, setMessage] = useState("");
+    let [error, setError] = useState({})
+
+    let navigate = useNavigate();
+
+    useEffect(() => {
+        checkInputErrors();
+    }, [email,password])
+
+    let checkInputErrors = () => {
+        let updatedErrors = {}
+
+        if (email == "" || email?.length < 3){
+            updatedErrors.email = "Incorret email format"
+        }
+        if (password == "" || password?.length < 5){
+            updatedErrors.password = "To short password"
+        }
+        setError(updatedErrors)
+    }
 
     let changeEmail = (e) => {
         setEmail(e.currentTarget.value)
@@ -32,11 +55,12 @@ let LoginUserComponent = () => {
                 localStorage.setItem("userId",jsonData.id)
                 localStorage.setItem("email",jsonData.email)
             }
-          
+            setLogin(true)
+            navigate("/myItems")
     
-            setMessage("Valid login")
         } else {
-            setMessage("Not user found")
+            let jsonData = await response.json();
+            setMessage(jsonData.error)
 
         }
     }
@@ -50,9 +74,11 @@ let LoginUserComponent = () => {
                 <div className="form-group">
                     <input type="text" placeholder="your email" onChange={changeEmail} />
                 </div>
+                { error.email && <p className="errorForm">{error.email} </p>}
                 <div className="form-group">
                     <input type="text" placeholder="your password"  onChange={changePassword} />
                  </div>
+                 { error.password && <p className="errorForm">{error.password}</p>}
                 <button onClick={clickLoginButton}>Login</button>
              </div>
         </div>

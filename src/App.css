@@ -82,3 +82,28 @@ button:hover {
   text-align: center;
   color: red;
 }
+
+
+.errorForm{
+  color: red;
+}
+
+
+.notification {
+  position: relative;
+  background-color: white;
+  border: 1px solid grey;
+  color: grey;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 14px;
+  color: #999;
+  cursor: pointer;
+}
