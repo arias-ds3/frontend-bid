@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { backendURL } from "../Globals";
 import { timeStampToDate } from "../Utils";
-
+import { List } from "antd";
 
 let ListBidsComponent = () => {
     let [bids, setBids] = useState([])
@@ -22,18 +22,19 @@ let ListBidsComponent = () => {
     }
 
     return (
-        <div className="item-list">
-            <h2>Bids </h2>
-            {
-                bids.map(bid => (
-                    <div className="item">
-                        <h3>{bid.amount} $</h3>
-                        <p>{ bid.email }</p>
-                        <p>{timeStampToDate(bid.date)}</p>
-                    </div>
-                ))
-            }
-        </div>
+        <List size="large"
+            header={<h2>List of bids</h2>}
+            bordered
+            dataSource={bids}
+            renderItem={ (bid) => (
+            <List.Item>
+                <h3>{bid.amount} $</h3>
+                <p>{ bid.email }</p>
+                <p>{timeStampToDate(bid.date)}</p>
+            </List.Item>
+        )}>
+        </List>
+       
     )
 }
 

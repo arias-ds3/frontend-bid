@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { backendURL } from "../Globals"
 import { timeStampToDate } from "../Utils"
 import { Link, useNavigate } from "react-router-dom"
+import { Card, List } from "antd"
 
 let ItemsComponent = () => {
 
@@ -30,26 +31,36 @@ let ItemsComponent = () => {
     }
 
     return (
-        <div>
+        <>
             <h2>Items</h2>
             { message != "" && <h3 className="errorMessage">{message}</h3>}
-            <div class="item-list">
-                { items.map ( item =>
-                    (
-                        <Link to={ "/item/"+item.id } >
-                            <div className="item">
-                                <h3>{item.name}</h3>
-                                <p className="description">{item.description}</p>
-                                <p className="price">{item.price}</p>
-                                <p>Seller: {item.email}</p>
-                                <p>Start: {timeStampToDate(item.dateStart)}</p>
-                                <p>Finish: {timeStampToDate(item.dateFinish)}</p>
-                            </div>
+
+            <List grid={{
+                gutter: 16,
+                xs: 1,
+                sm: 2,
+                md: 4,
+                lg: 4,
+                xl: 6,
+                xxl: 6
+            }}
+             dataSource={items} renderItem={(item) => (
+                <List.Item>
+                    <Card hoverable title={item.name} style={{height:"300px"}} >
+                        <Link to={"/items/"+item.id} >
+                            <p className="description">{item.description}</p>
+                            <p className="price">{item.price}</p>
+                            <p>Seller: {item.email}</p>
+                            <p>Start: {timeStampToDate(item.dateStart)}</p>
+                            <p>Finish: {timeStampToDate(item.dateFinish)}</p>
                         </Link>
-                    )
-                )}
-            </div>
-        </div>
+                    </Card>
+                </List.Item>
+            )}>
+
+            </List>
+           
+        </>
     )
 
 }

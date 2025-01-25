@@ -1,5 +1,5 @@
+import 'antd/dist/reset.css'
 
-import './App.css';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { backendURL } from './Globals';
@@ -12,11 +12,12 @@ import MyItemsComponent from './Components/MyItemsComponent';
 import DetailsItemComponent from './Components/DetailsItemComponent';
 import EditItemComponent from './Components/EditItemComponent';
 import ListBidsComponent from './Components/ListBidsComponent';
-
+import { Layout, Menu, message, notification } from 'antd';
 
 
 let App =() => {
-  let [notification, setNotification] = useState("");
+  const [api, contextHolder] = notification.useNotification()
+
   let [login, setLogin] = useState(false)
   let navigate = useNavigate();
 
@@ -28,13 +29,12 @@ let App =() => {
     }
   },[])
 
-
-
-  let createNotification = (msg) => {
-    setNotification(msg);
-    setTimeout(() => {
-      setNotification("");
-    }, 3000)
+  let createNotification = (msg, type="info", placement="top") => {
+    api[type]({
+      message: msg,
+      description: msg,
+      placement
+    })
   }
 
   let disconnect = async () => {
@@ -44,28 +44,33 @@ let App =() => {
     setLogin(false)
     navigate("/login")
   }
+  let { Header, Content, Footer } = Layout
 
   return (
-    <div className="main-container">
-      <nav>
-        <ul className='navbar'>
-            <li><Link to="/">Index</Link></li>
-            { !login && <li><Link to="/register">Register</Link></li>}
-            { !login && <li><Link to="/Login">Login</Link></li>}
-            { login && <li><Link to="/items">Items</Link></li>}
-            { login && <li><Link to="#" onClick={disconnect}>Disconnect</Link></li>}
-            { login && <li><Link to="/createItem">Create items</Link></li>}
-            { login && <li><Link to="/MyItems">My Items</Link></li>}
-        </ul>
-      </nav>
+    <>
+    {contextHolder}
+    <Layout className='layaout' style={{ minHeight:'100vh'}}>
+      <Header>
+        { !login && (
+               <Menu theme='dark' mode='horizontal' items={[
+                { key: "menuRegister", label:<Link to="/register">Register</Link>},
+                { key: "menuLogin", label:<Link to="/login">Login</Link>},
+               ]}>
 
-      { notification != "" && (
-        <div className='notification'>
-          { notification }
-          <span className='close-btn' onClick={() => { setNotification("")} }>X</span>
-        </div>
-      )}
+               </Menu>
+        )}
+        { login && (
+            <Menu theme='dark' mode='horizontal' items={[
+                { key: "menuCreateItem", label:<Link to="/createItem">Create Items</Link>},
+                { key: "menuItems", label:<Link to="/items">items</Link>},
+                { key: "menuMyItems", label:<Link to="/MyItems">My Items</Link>},
+                { key: "menuDisconnect", label:<Link to="#"  onClick={disconnect}>Disconnect</Link>},
+               ]}>
 
+            </Menu>
+        )}
+      </Header>
+      <Content style={{ padding: '20px 50px'}}>
       <Routes>
         <Route path='/register' element={
           <CreateUserComponent createNotification={createNotification} />
@@ -95,8 +100,10 @@ let App =() => {
               <ListBidsComponent/>
           } />
       </Routes>
-
-    </div>
+      </Content>
+      <Footer style={{ textAlign: 'center'}}>My website</Footer>
+      </Layout>
+      </>
   );
 }
 

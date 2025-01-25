@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { backendURL } from "../Globals";
 import { useNavigate } from "react-router-dom";
+import { Button, Card, Input, Row, Col } from "antd";
+
 
 let LoginUserComponent = (props) => {
     let { setLogin } = props;
@@ -67,21 +69,15 @@ let LoginUserComponent = (props) => {
 
 
     return (
-        <div>
-            <h2>Login</h2>
-             { message  != "" && <h3 className="errorMessage"> {message} </h3>}
-            <div className="center-box">
-                <div className="form-group">
-                    <input type="text" placeholder="your email" onChange={changeEmail} />
-                </div>
-                { error.email && <p className="errorForm">{error.email} </p>}
-                <div className="form-group">
-                    <input type="text" placeholder="your password"  onChange={changePassword} />
-                 </div>
-                 { error.password && <p className="errorForm">{error.password}</p>}
-                <button onClick={clickLoginButton}>Login</button>
-             </div>
-        </div>
+        <Row align="middle" justify="center" style={{minHeight:"70vh"}}>
+            <Col>
+                <Card title="Login" style={{ minWidth: "300px", maxWidth: "500px"}}>
+                    <Input size="large" style={{marginBottom: "10px"}} type="text" placeholder="you email" onChange={changeEmail}/>
+                    <Input size="large" style={{marginBottom: "10px"}} type="text" placeholder="you password" onChange={changePassword}/>
+                    <Button type="primary" style={{marginBottom: "10px"}} onClick={clickLoginButton} block>Login</Button>
+                </Card>
+             </Col>
+        </Row>
     )
 
 }

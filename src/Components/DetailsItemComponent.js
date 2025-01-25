@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { backendURL } from "../Globals"
 import { timeStampToDate } from "../Utils"
 import { Link, useParams } from "react-router-dom"
+import { Descriptions, Input, Button, Row, Col } from "antd"
 
 let DetailsItemComponent = (props) => {
     let { createNotification } = props;
@@ -68,26 +69,28 @@ let DetailsItemComponent = (props) => {
 
     return (
         <div>
-            <h2>Items</h2>
-            { message != "" && <h3 className="errorMessage">{message}</h3>}
-            <div class="item-list">
-                        <div className="item">
-                            <h3>{item.name}</h3>
-                            <p className="description">{item.description}</p>
-                            <p className="price">{item.initialPrice} $</p>
-                            <p>Seller: {item.email}</p>
-                            <p>Start: {timeStampToDate(item.dateStart)}</p>
-                            <p>Finish: {timeStampToDate(item.dateFinish)}</p>
-                            <p>higher bid: { higherBid }</p>
-                            <h3>New bid for this item</h3>
-                                <div className="form-gruop">
-                                    <input type="number" placeholder="Bid" onChange={onChangeBid}></input>
-                                </div>  
-                                <button onClick={clickBidButton}>Send bid</button>
-                                <Link to={"/item/+item.id"+"/bids"}> See all bids</Link>
-                        </div>
-    
-            </div>
+            <Descriptions title={item.name} layout="vertical" >
+                <Descriptions.Item label="Description" span={3}>{item.description} </Descriptions.Item>
+                <Descriptions.Item label="initial price">{item.initialPrice} $ </Descriptions.Item>
+                <Descriptions.Item label="Description">{item.description} </Descriptions.Item>
+                <Descriptions.Item label="Seller">{item.email} </Descriptions.Item>
+                <Descriptions.Item label="Start">{timeStampToDate(item.dateStart)} </Descriptions.Item>
+                <Descriptions.Item label="Finish">{timeStampToDate(item.dateFinish)} </Descriptions.Item>
+                <Descriptions.Item label="higher bid">
+                    {higherBid}
+                     <Link to={"/item/+item.id"+"/bids"}> See all bids</Link> 
+                </Descriptions.Item>
+                <Descriptions.Item span={3}></Descriptions.Item>
+                <Descriptions.Item span={3}> 
+                    <Row justify="center" style={{width: "100%"}}>
+                        <Col>
+                            <Input size="large" style={{ marginBottom: "10px"}} type="number" placeholder="bid" onChange={onChangeBid}></Input>
+                            <Button type="primary" onClick={clickBidButton} block>Send bid</Button>
+                            </Col>
+                    </Row>
+                </Descriptions.Item>
+            </Descriptions>
+            
         </div>
     )
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { backendURL } from "../Globals"
 import { timeStampToDate } from "../Utils"
 import { useNavigate } from "react-router-dom"
+import { Table, Button } from "antd"
 
 let MyItemsComponent = (props) => {
     let { createNotification } = props;
@@ -38,7 +39,7 @@ let MyItemsComponent = (props) => {
         if (response.ok){
             //getItems();
             let updatedItems = items.filter(item => item.id != id)
-            createNotification("Item deleted successfully")
+            createNotification("Item deleted successfully", "error")
             setItems(updatedItems)
         } else {
             let jsonData = await response.json();
@@ -51,26 +52,54 @@ let MyItemsComponent = (props) => {
         navigate("/item/edit/"+id)
     }
 
+    let columns = [
+        {
+            title: "name item",
+            dataIndex: "name"
+        },
+        {
+            title: "description",
+            dataIndex: "description"
+        },
+        {
+            title: "seller",
+            dataIndex: "email"
+        },
+        {
+            title: "Start",
+            dataIndex: "formatDateStart"
+        },
+        {
+            title: "End",
+            dataIndex: "formatDateFinish"
+        },
+        {
+            title: "Delete",
+            dataIndex: "id",
+            render: (id) => <Button onClick={  () => {deleteItem(id)}}>Delete</Button>
+        },
+        {
+            title: "Edit",
+            dataIndex: "id",
+            render: (id) => <Button onClick={  () => {editItem(id)}}>Edit</Button>
+        },
+
+
+    ]
+
+    items.map( item => {
+        item.formatDateStart = timeStampToDate(item.dateStart)
+        item.formatDateFinish = timeStampToDate(item.dateFinish)
+        return item
+    })
+
+
     return (
+
         <div>
             <h2>Items</h2>
             { message != "" && <h3 className="errorMessage">{message}</h3>}
-            <div class="item-list">
-                { items.map ( item =>
-                    (
-                        <div className="item">
-                            <h3>{item.name}</h3>
-                            <p className="description">{item.description}</p>
-                            <p className="price">{item.price}</p>
-                            <p>Seller: {item.email}</p>
-                            <p>Start: {timeStampToDate(item.dateStart)}</p>
-                            <p>Finish: {timeStampToDate(item.dateFinish)}</p>
-                            <button onClick={() => {deleteItem(item.id)}}>Delete</button>
-                            <button onClick={() => {editItem(item.id)}}>Edit</button>
-                        </div>
-                    )
-                )}
-            </div>
+            <Table columns={columns} dataSource={items}/>
         </div>
     )
 

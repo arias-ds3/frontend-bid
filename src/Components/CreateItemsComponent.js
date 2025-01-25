@@ -1,6 +1,7 @@
 import { use, useEffect, useState } from "react"
 import { backendURL } from "../Globals";
 import { useNavigate } from "react-router-dom";
+import { Button, Card, Input, Row, Col, Typography, Alert }from "antd";
 
 let CreateItemComponent = (props) => {
     let { createNotification } = props;
@@ -77,31 +78,32 @@ let CreateItemComponent = (props) => {
                 }
     }
 
+    let { Text } = Typography;
+
     return (
-        <div>
-            <h2>Create Item</h2>
-            { message != "" && <h3 className="errorMessage">{message}</h3>}
-            <div className="center-box">
-                <div className="form-group">
-                    <input type="text" placeholder="name" onChange={ (e) => changeProperty("name",e)} />
-                </div>
-                { error.name && <p className="errorForm">{error.name} </p>}
-                <div className="form-group">
-                    <input type="text" placeholder="description"  onChange={ (e) => changeProperty("description",e)} />
-                </div>
-                { error.description && <p className="errorForm">{error.description} </p>}
-                <div className="form-group">
-                    <input type="number" placeholder="price"  onChange={ (e) => changeProperty("initialPrice",e)} />
-                </div>
-                { error.initialPrice && <p className="errorForm">{error.initialPrice} </p>}
-                <div className="form-group">
-                    <input type="datetime-local" placeholder="date finish"  onChange={(e) => changeDate(e)} />
-                </div>
-                { error.dateFinish && <p className="errorForm">{error.dateFinish} </p>}
-                <button onClick={clickCreate}>Create Item</button>
-            </div>
-        </div>
+        <Row align="middle" justify="center" style={{minHeight:"70vh"}}>
+        
+        <Col>
+            { message != "" && <Alert type="error" message={ message } /> }
+            <Card title="Create Item" style={{ width: "500px"}}>
+
+                <Input size="large" type="text" placeholder="name" onChange={ (e) => changeProperty("name",e)}/>
+                { error.name && <Text type="danger">{error.name}</Text> }
+
+                <Input size="large" style={{marginInTop: "10px"}} type="text" placeholder=" description" onChange={ (e) => changeProperty("description",e)}/>
+                { error.description && <Text type="danger">{error.description}</Text> }
+
+                <Input size="large" style={{marginInTop: "10px"}} type="number" placeholder=" price"  onChange={ (e) => changeProperty("initialPrice",e)}/>
+                { error.initialPrice && <Text type="danger">{error.initialPrice}</Text> }
+
+                <Input size="large" style={{marginInTop: "10px"}} type="datetime-local" placeholder=" date finish"  onChange={(e) => changeDate(e)}/>
+                { error.dateFinish && <Text type="danger">{error.dateFinish}</Text> }
+
+                <Button type="primary" style={{marginInTop: "10px"}} onClick={clickCreate} block>Create Item</Button>
+            </Card>
+        </Col>
+    </Row>
     )
 }
 
-export default CreateItemComponent
+export default CreateItemComponent;
